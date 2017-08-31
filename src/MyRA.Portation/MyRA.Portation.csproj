@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.0;net461;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.0-alpha</Version>
+    <Description>Generic package for importing and exporting models. Currently only Excel is supported, which uses EPPlus.Core</Description>
+    <Authors>Topicus Fincare</Authors>
+    <Company>Topicus Fincare</Company>
+    <PackageProjectUrl>https://hg.topicus.nl/fincare/components/MyRA.portation</PackageProjectUrl>
+    <RepositoryUrl>https://hg.topicus.nl/fincare/components/MyRA.portation</RepositoryUrl>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EPPlus.Core" Version="1.5.2" />
+  </ItemGroup>
+</Project>

@@ -6,7 +6,7 @@ namespace MyRA.Portation.Excel.Models
     /// <summary>
     ///     Class for holding information about property to be parsed.
     /// </summary>
-    /// <seealso cref="MyRA.Portation.Excel.Models.ExcelSheetInfo" />
+    /// <seealso cref="ExcelSheetInfo" />
     internal sealed class ExcelSheetPropertyInfo : ExcelSheetInfo
     {
         /// <summary>
@@ -53,7 +53,7 @@ namespace MyRA.Portation.Excel.Models
 
         public override string ToString()
         {
-            return $"{SheetName} ({Property.GetType()})";
+            return $"{SheetName} ({Property.PropertyType})";
         }
     }
 }

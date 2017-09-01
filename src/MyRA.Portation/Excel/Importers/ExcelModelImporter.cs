@@ -55,7 +55,7 @@ namespace MyRA.Portation.Excel.Importers
                 }
             }
 
-            return (TModel)model;
+            return (TModel) model;
         }
     }
 }

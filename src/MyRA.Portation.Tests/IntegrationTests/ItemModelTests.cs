@@ -18,7 +18,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             var parsingProperties = ExcelReflection.GetParsingProperties(targetType);
 
             Assert.Equal(1, parsingProperties.Count);
-            Assert.Equal(nameof(ItemModel.Name), parsingProperties[0].ColumnName);
+            Assert.Equal((string) nameof(ItemModel.Name), (string) parsingProperties[0].ColumnName);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 // NOTE - EPPlus starts at 1
                 Assert.Equal(1, package.Workbook.Worksheets.Count);
                 var itemsWorksheet = package.Workbook.Worksheets[1];
-
+                
                 Assert.Equal(nameof(ItemModel), itemsWorksheet.Name);
                 Assert.Equal(nameof(ItemModel.Name), itemsWorksheet.Cells[1, 1].Text);
                 Assert.Equal(item1, itemsWorksheet.Cells[2, 1].Text);
@@ -77,7 +77,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 var importer = new ExcelModelImporter(stream);
                 var otuputItems = importer.ImportModel<List<ItemModel>>();
 
-                Assert.Equal(items, otuputItems);
+                Assert.Equal<ItemModel>(items, otuputItems);
             }
         }
     }

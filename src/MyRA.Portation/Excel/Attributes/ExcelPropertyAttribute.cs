@@ -9,7 +9,7 @@ namespace MyRA.Portation.Excel.Attributes
     public sealed class ExcelPropertyAttribute : Attribute
     {
         /// <summary>
-        ///     Column position to be used when exporting type.
+        ///     Static column position
         /// </summary>
         public int? Column { get; set; }
 
@@ -30,6 +30,29 @@ namespace MyRA.Portation.Excel.Attributes
         ///     Format string injected if Converter implements IFormatableConverter
         /// </summary>
         public string ConverterFormat { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExcelPropertyAttribute"/> class.
+        /// </summary>
+        public ExcelPropertyAttribute() { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExcelPropertyAttribute"/> class.
+        /// </summary>
+        /// <param name="column">The column.</param>
+        public ExcelPropertyAttribute(int column)
+        {
+            Column = column;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExcelPropertyAttribute"/> class.
+        /// </summary>
+        /// <param name="columnName">Name of the column.</param>
+        public ExcelPropertyAttribute(string columnName)
+        {
+            ColumnName = columnName;
+        }
 
         public override string ToString()
         {

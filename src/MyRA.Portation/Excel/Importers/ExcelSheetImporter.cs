@@ -95,10 +95,8 @@ namespace MyRA.Portation.Excel.Importers
             return ImportSheetAsListImpl(sheetName, typeof(T)).Cast<T>().ToList();
         }
 
-        private static IDictionary<ExcelPropertyInfo, int> FindColumns(ExcelRange headerRange, IList<ExcelPropertyInfo> parsingProperties, ColomnOrientation orientation)
+        private static void FixColumns(ExcelRange headerRange, IList<ExcelPropertyInfo> parsingProperties, ColomnOrientation orientation)
         {
-            var result = new Dictionary<ExcelPropertyInfo, int>();
-
             var startRow = headerRange.Start.Row;
             var startCol = headerRange.Start.Column;
 
@@ -109,32 +107,52 @@ namespace MyRA.Portation.Excel.Importers
                 ? headerRange.End.Column
                 : headerRange.End.Row;
 
-            for (var xy = start; xy <= end; ++xy)
+            var takenColumns = new HashSet<int>();
+            foreach (var property in parsingProperties)
             {
-                // NOTE: ExcelRange[] has weird ass side effects!!
-                // - when using [] it modifies the current object
-                var cell = orientation == ColomnOrientation.Horizontal
-                    ? headerRange[startRow, xy].Text
-                    : headerRange[xy, startCol].Text;
+                int? column = null;
+                if (property.Attribute.Column.HasValue)
+                {
+                    if (property.Attribute.Column.Value > end || property.Attribute.Column.Value < start)
+                        throw new ImportException($"Parsing property for {property} is out of range {start} - {end}");
 
-                var property = parsingProperties.FirstOrDefault(p => p.ColumnName == cell);
+                    column = property.Attribute.Column;
+                }
+                else if (!string.IsNullOrEmpty(property.ColumnName))
+                {
+                    for (var xy = start; xy <= end; ++xy)
+                    {
+                        var cell = orientation == ColomnOrientation.Horizontal
+                            ? headerRange[startRow, xy].Text
+                            : headerRange[xy, startCol].Text;
 
-                // ignore the column if we don't parse it 
-                if (property == null)
-                    continue;
+                        if (!string.Equals(cell, property.ColumnName, StringComparison.CurrentCultureIgnoreCase))
+                            continue;
 
-                if (result.ContainsKey(property))
-                    throw new ImportException($"Could not parse columns; column {property.ColumnName} (at {xy}) has duplicate");
+                        // NOTE - we keep on iterating, even if we have found the column because we are going to throw exception if we find duplicate
+                        if (column.HasValue)
+                            throw new ImportException($"Could not parse columns; column {property} was already found at {column}");
+                        if (takenColumns.Contains(xy))
+                            throw new ImportException($"Could not parse columns; column {property} is already been taken");
 
-                result[property] = xy;
+                        column = xy;
+                    }
+                }
+                else
+                {
+                    throw new ImportException("Could not parse columns; current object does not have harcoded Column or ColumnName");
+                }
+                
+                property.Column = column;
+                takenColumns.Add(column.Value);
             }
-
+            
             var missingProperties = parsingProperties
-                .Where(p => !result.Keys.Select(k => k.ColumnName).Contains(p.ColumnName))
+                .Where(p => !p.Column.HasValue)
                 .ToArray();
 
             if (!missingProperties.Any())
-                return result;
+                return;
 
             var missingColumns = missingProperties
                 .Select(p => p.ColumnName)
@@ -158,8 +176,7 @@ namespace MyRA.Portation.Excel.Importers
 
             // row of objects, column at first 
             var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column, worksheet.Dimension.Start.Row, worksheet.Dimension.End.Column];
-
-            var columnPositions = FindColumns(headerRange, parsingProperties, ColomnOrientation.Horizontal);
+            FixColumns(headerRange, parsingProperties, ColomnOrientation.Horizontal);
 
             // skip the header
             var startRow = worksheet.Dimension.Start.Row + 1;
@@ -170,9 +187,10 @@ namespace MyRA.Portation.Excel.Importers
                 var item = Activator.CreateInstance(type);
                 foreach (var parsingProperty in parsingProperties)
                 {
-                    var column = columnPositions[parsingProperty];
-                    var value = worksheet.Cells[row, column].Text;
+                    if (!parsingProperty.Column.HasValue)
+                        throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
+                    var value = worksheet.Cells[row, parsingProperty.Column.Value].Text;
                     ExcelReflection.SetConvertedValue(parsingProperty, item, value);
                 }
 
@@ -197,13 +215,14 @@ namespace MyRA.Portation.Excel.Importers
 
             // single object, import as KEY : VALUE instead of multiple rows
             var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column, worksheet.Dimension.End.Row, worksheet.Dimension.Start.Column];
-            var rowPositions = FindColumns(headerRange, parsingProperties, ColomnOrientation.Vertical);
+            FixColumns(headerRange, parsingProperties, ColomnOrientation.Vertical);
 
             foreach (var parsingProperty in parsingProperties)
             {
-                var row = rowPositions[parsingProperty];
-                var value = worksheet.Cells[row, worksheet.Dimension.Start.Column + 1].Text;
+                if (!parsingProperty.Column.HasValue)
+                    throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
+                var value = worksheet.Cells[parsingProperty.Column.Value, worksheet.Dimension.Start.Column + 1].Text;
                 ExcelReflection.SetConvertedValue(parsingProperty, item, value);
             }
 

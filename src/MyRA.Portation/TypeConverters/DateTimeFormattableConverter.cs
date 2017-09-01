@@ -38,11 +38,11 @@ namespace MyRA.Portation.TypeConverters
 
             switch (value)
             {
-                case string strValue:
-                    return DateTime.ParseExact(strValue, ConvertFormat, culture);
+            case string strValue:
+                return DateTime.ParseExact(strValue, ConvertFormat, culture);
 
-                default:
-                    return base.ConvertFrom(context, culture, value);
+            default:
+                return base.ConvertFrom(context, culture, value);
             }
         }
 
@@ -53,11 +53,11 @@ namespace MyRA.Portation.TypeConverters
 
             switch (value)
             {
-                case DateTime date:
-                    return date.ToString(ConvertFormat);
+            case DateTime date:
+                return date.ToString(ConvertFormat);
 
-                default:
-                    return base.ConvertFrom(context, culture, value);
+            default:
+                return base.ConvertFrom(context, culture, value);
             }
         }
     }

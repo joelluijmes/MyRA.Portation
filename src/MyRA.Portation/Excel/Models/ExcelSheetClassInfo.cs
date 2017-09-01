@@ -6,7 +6,7 @@ namespace MyRA.Portation.Excel.Models
     /// <summary>
     ///     Class for holding information of to be parsed class model.
     /// </summary>
-    /// <seealso cref="MyRA.Portation.Excel.Models.ExcelSheetInfo" />
+    /// <seealso cref="ExcelSheetInfo" />
     internal sealed class ExcelSheetClassInfo : ExcelSheetInfo
     {
         /// <summary>

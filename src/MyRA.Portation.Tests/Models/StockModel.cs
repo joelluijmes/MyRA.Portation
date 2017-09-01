@@ -27,7 +27,7 @@ namespace MyRA.Portation.Tests.Models
             if (ReferenceEquals(this, obj))
                 return true;
 
-            return obj is StockModel && Equals((StockModel)obj);
+            return obj is StockModel && Equals((StockModel) obj);
         }
 
         public override int GetHashCode()

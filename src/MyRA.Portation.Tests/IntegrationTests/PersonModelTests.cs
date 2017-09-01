@@ -20,9 +20,9 @@ namespace MyRA.Portation.Tests.IntegrationTests
             Assert.Equal(3, parsingProperties.Count);
 
             // NOTE - GetParsingProperties must be in order of properties declared (eg for default column numbering)
-            Assert.Equal(nameof(PersonModel.Id), parsingProperties[0].ColumnName);
-            Assert.Equal(nameof(PersonModel.Firstname), parsingProperties[1].ColumnName);
-            Assert.Equal(nameof(PersonModel.Lastname), parsingProperties[2].ColumnName);
+            Assert.Equal((string) nameof(PersonModel.Id), (string) parsingProperties[0].ColumnName);
+            Assert.Equal((string) nameof(PersonModel.Firstname), (string) parsingProperties[1].ColumnName);
+            Assert.Equal((string) nameof(PersonModel.Lastname), (string) parsingProperties[2].ColumnName);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             var targetType = typeof(PersonModel);
             var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
 
-            Assert.Equal(PersonModel.SHEET_NAME, sheetInfo.SheetName);
+            Assert.Equal((string) PersonModel.SHEET_NAME, (string) sheetInfo.SheetName);
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace MyRA.Portation.Tests.IntegrationTests
         {
             var targetType = typeof(IList<PersonModel>);
             var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
-
-            Assert.Equal(PersonModel.SHEET_NAME, sheetInfo.SheetName);
+            
+            Assert.Equal((string) PersonModel.SHEET_NAME, (string) sheetInfo.SheetName);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             const string person1Firstname = "Anne";
             const string person1Lastname = "Jenzen";
 
-            var person = new PersonModel { Id = 1, Firstname = person1Firstname, Lastname = person1Lastname };
+            var person = new PersonModel {Id = 1, Firstname = person1Firstname, Lastname = person1Lastname};
 
             using (var stream = new MemoryStream())
             {
@@ -156,7 +156,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 var impoter = new ExcelModelImporter(stream);
                 var outputPersons = impoter.ImportModel<List<PersonModel>>();
 
-                Assert.Equal(persons, outputPersons);
+                Assert.Equal<PersonModel>(persons, outputPersons);
             }
         }
     }

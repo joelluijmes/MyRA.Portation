@@ -16,7 +16,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             var targetType = typeof(OrderModel);
             var orderSheetInfo = ExcelReflection.GetSheetInfo(targetType);
 
-            Assert.Equal(OrderModel.SHEET_NAME, orderSheetInfo.SheetName);
+            Assert.Equal((string) OrderModel.SHEET_NAME, (string) orderSheetInfo.SheetName);
         }
 
         [Fact]

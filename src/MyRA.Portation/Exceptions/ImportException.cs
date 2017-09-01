@@ -6,7 +6,7 @@ namespace MyRA.Portation.Exceptions
     /// <summary>
     ///     Exception thrown when importing.
     /// </summary>
-    /// <seealso cref="MyRA.Portation.Exceptions.PortationException" />
+    /// <seealso cref="PortationException" />
     public sealed class ImportException : PortationException
     {
         /// <summary>

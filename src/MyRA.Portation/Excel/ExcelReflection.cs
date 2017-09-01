@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using MyRA.Portation.Excel.Attributes;
 using MyRA.Portation.Excel.Models;
+using MyRA.Portation.Exceptions;
 using MyRA.Portation.TypeConverters;
 
 namespace MyRA.Portation.Excel
@@ -44,12 +45,22 @@ namespace MyRA.Portation.Excel
                 })
                 .ToArray();
 
-            for (var i = 0; i < properties.Length; ++i)
+            var duplicateColumnGroups = properties
+                .Where(p => p.Attribute.Column.HasValue)
+                .GroupBy(p => p.Attribute.Column)
+                .Where(group => group.Count() > 1)
+                .ToArray();
+
+            if (duplicateColumnGroups.Length > 0)
             {
-                if (!properties[i].Attribute.Column.HasValue)
-                    properties[i].Attribute.Column = i;
+                throw new ParserException("Model has duplicate columns at:\r\n" +
+                                          $"{duplicateColumnGroups.Select(g => $"{g.Key} - {g.Select(p => p.ColumnName).Aggregate((acc, cur) => $"{acc}, {cur}")}").Aggregate(" ", (acc, cur) => $"{acc}\r\n {cur}")}");
             }
 
+            var invalidColumn = properties.FirstOrDefault(p => p.Attribute.Column == 0);
+            if (invalidColumn != null)
+                throw new ParserException($"Property {invalidColumn} has invalid column, columns starts at 1");
+            
             return properties;
         }
 
@@ -65,7 +76,7 @@ namespace MyRA.Portation.Excel
 
             var attribute = targetType.GetCustomAttribute<ExcelSheetAttribute>();
             return attribute == null
-                ? new ExcelSheetClassInfo(new ExcelSheetAttribute { SheetName = targetType.Name }, type)
+                ? new ExcelSheetClassInfo(new ExcelSheetAttribute {SheetName = targetType.Name}, type)
                 : new ExcelSheetClassInfo(attribute, type);
         }
 
@@ -120,7 +131,7 @@ namespace MyRA.Portation.Excel
             if (nullableTargetType != null)
             {
                 // if string is null, set it as null
-                if (string.IsNullOrEmpty(value))
+                if (String.IsNullOrEmpty(value))
                 {
                     parsingPropertyInfo.Property.SetValue(obj, null);
                     return;
@@ -137,14 +148,38 @@ namespace MyRA.Portation.Excel
             parsingPropertyInfo.Property.SetValue(obj, convertedValue);
         }
 
+        public static void AutoAssignColumns(IList<ExcelPropertyInfo> parsingProperties)
+        {
+            var takenColumns = new HashSet<int>();
+            var index = 1;
+            foreach (var property in parsingProperties)
+            {
+                int column;
+                if (property.Attribute.Column.HasValue)
+                {
+                    column = property.Attribute.Column.Value;
+                }
+                else
+                {
+                    while (takenColumns.Contains(index))
+                        ++index;
+
+                    column = index++;
+                }
+
+                property.Column = column;
+                takenColumns.Add(column);
+            }
+        }
+
         private static TypeConverter GetTypeConverter(ExcelPropertyInfo parsingPropertyInfo, Type targetType)
         {
             var converterType = parsingPropertyInfo.Attribute.Converter;
             var converter = converterType?.IsAbstract == false && converterType.IsSubclassOf(typeof(TypeConverter))
-                ? (TypeConverter)Activator.CreateInstance(converterType)
+                ? (TypeConverter) Activator.CreateInstance(converterType)
                 : TypeDescriptor.GetConverter(targetType);
 
-            if (converter is IFormattableConverter formatableConverter && !string.IsNullOrEmpty(parsingPropertyInfo.Attribute.ConverterFormat))
+            if (converter is IFormattableConverter formatableConverter && !String.IsNullOrEmpty(parsingPropertyInfo.Attribute.ConverterFormat))
                 formatableConverter.ConvertFormat = parsingPropertyInfo.Attribute.ConverterFormat;
 
             return converter;
@@ -159,7 +194,7 @@ namespace MyRA.Portation.Excel
                 return false;
             }
 
-            customAttribute = (T)attributes;
+            customAttribute = (T) attributes;
             return true;
         }
     }

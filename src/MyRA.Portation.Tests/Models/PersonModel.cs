@@ -30,7 +30,7 @@ namespace MyRA.Portation.Tests.Models
             if (ReferenceEquals(this, obj))
                 return true;
 
-            return obj is PersonModel && Equals((PersonModel)obj);
+            return obj is PersonModel && Equals((PersonModel) obj);
         }
 
         public override int GetHashCode()

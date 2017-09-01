@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MyRA.Portation.Exceptions;
@@ -97,16 +96,17 @@ namespace MyRA.Portation.Excel.Exporters
             if (!parsingProperties.Any())
                 return;
 
+            ExcelReflection.AutoAssignColumns(parsingProperties);
             var worksheet = Worksheets.Add(sheetName);
 
             // single object, so export as KEY : VALUE instead of rows of data
-            var index = 1;
             foreach (var parsingProperty in parsingProperties)
             {
-                worksheet.Cells[index, 1].Value = parsingProperty.ColumnName;
-                worksheet.Cells[index, 2].Value = ExcelReflection.GetValue(parsingProperty, data);
+                if (!parsingProperty.Column.HasValue)
+                    throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
-                ++index;
+                worksheet.Cells[parsingProperty.Column.Value, 1].Value = parsingProperty.ColumnName;
+                worksheet.Cells[parsingProperty.Column.Value, 2].Value = ExcelReflection.GetValue(parsingProperty, data);
             }
         }
 
@@ -120,15 +120,18 @@ namespace MyRA.Portation.Excel.Exporters
             if (!parsingProperties.Any())
                 return;
 
+            ExcelReflection.AutoAssignColumns(parsingProperties);
             var worksheet = Worksheets.Add(sheetName);
 
             // write column header
-            for (var i = 0; i < parsingProperties.Count; i++)
+            foreach (var parsingProperty in parsingProperties)
             {
-                var parsingProperty = parsingProperties[i];
-                worksheet.Cells[1, i + 1].Value = parsingProperty.ColumnName;
-            }
+                if (!parsingProperty.Column.HasValue)
+                    throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
+                worksheet.Cells[1, parsingProperty.Column.Value].Value = parsingProperty.ColumnName;
+            }
+            
             // write the data
             // +2 : EPPlus starts at 1, and we have a column header
             var index = 2;
@@ -136,9 +139,10 @@ namespace MyRA.Portation.Excel.Exporters
             {
                 foreach (var parsingProperty in parsingProperties)
                 {
-                    Debug.Assert(parsingProperty.Attribute.Column != null, "parsingProperty.Attribute.Column != null");
+                    if (!parsingProperty.Column.HasValue)
+                        throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
-                    worksheet.Cells[index, parsingProperty.Attribute.Column.Value + 1].Value = ExcelReflection.GetValue(parsingProperty, row);
+                    worksheet.Cells[index, parsingProperty.Column.Value].Value = ExcelReflection.GetValue(parsingProperty, row);
                 }
 
                 ++index;

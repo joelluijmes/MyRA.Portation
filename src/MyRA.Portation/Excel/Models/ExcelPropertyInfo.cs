@@ -23,9 +23,14 @@ namespace MyRA.Portation.Excel.Models
         /// </summary>
         public PropertyInfo Property { get; set; }
 
+        /// <summary>
+        /// Gets or sets the column where data is exported to
+        /// </summary>
+        public int? Column { get; set; }
+
         public override string ToString()
         {
-            return $"{ColumnName} ({Property.GetType()})";
+            return $"{ColumnName} ({Property.PropertyType}{(Column.HasValue ? $" at {Column}" : "")})";
         }
     }
 }

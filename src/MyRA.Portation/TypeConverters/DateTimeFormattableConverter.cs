@@ -12,7 +12,9 @@ namespace MyRA.Portation.TypeConverters
     /// <seealso cref="IFormattableConverter" />
     public sealed class DateTimeFormattableConverter : TypeConverter, IFormattableConverter
     {
-        public DateTimeFormattableConverter() { }
+        public DateTimeFormattableConverter()
+        {
+        }
 
         public DateTimeFormattableConverter(string convertFormat)
         {
@@ -34,30 +36,33 @@ namespace MyRA.Portation.TypeConverters
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             if (string.IsNullOrEmpty(ConvertFormat))
-                throw new ParserException($"{nameof(DateTimeFormattableConverter)} implements {nameof(IFormattableConverter)}, however {nameof(ConvertFormat)} is null or empty");
+                throw new ParserException(
+                    $"{nameof(DateTimeFormattableConverter)} implements {nameof(IFormattableConverter)}, however {nameof(ConvertFormat)} is null or empty");
 
             switch (value)
             {
-            case string strValue:
-                return DateTime.ParseExact(strValue, ConvertFormat, culture);
+                case string strValue:
+                    return DateTime.ParseExact(strValue, ConvertFormat, culture);
 
-            default:
-                return base.ConvertFrom(context, culture, value);
+                default:
+                    return base.ConvertFrom(context, culture, value);
             }
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
         {
             if (string.IsNullOrEmpty(ConvertFormat))
-                throw new ParserException($"{nameof(DateTimeFormattableConverter)} implements {nameof(IFormattableConverter)}, however {nameof(ConvertFormat)} is null or empty");
+                throw new ParserException(
+                    $"{nameof(DateTimeFormattableConverter)} implements {nameof(IFormattableConverter)}, however {nameof(ConvertFormat)} is null or empty");
 
             switch (value)
             {
-            case DateTime date:
-                return date.ToString(ConvertFormat);
+                case DateTime date:
+                    return date.ToString(ConvertFormat);
 
-            default:
-                return base.ConvertFrom(context, culture, value);
+                default:
+                    return base.ConvertFrom(context, culture, value);
             }
         }
     }

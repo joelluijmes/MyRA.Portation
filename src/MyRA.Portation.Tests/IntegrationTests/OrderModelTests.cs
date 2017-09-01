@@ -11,15 +11,6 @@ namespace MyRA.Portation.Tests.IntegrationTests
     public sealed class OrderModelTests
     {
         [Fact]
-        public void TestObjectOrder_GetSheetName()
-        {
-            var targetType = typeof(OrderModel);
-            var orderSheetInfo = ExcelReflection.GetSheetInfo(targetType);
-
-            Assert.Equal((string) OrderModel.SHEET_NAME, (string) orderSheetInfo.SheetName);
-        }
-
-        [Fact]
         public void TestObjectOrder_Export()
         {
             const string person1Firstname = "Anne";
@@ -33,10 +24,10 @@ namespace MyRA.Portation.Tests.IntegrationTests
             {
                 new ItemModel {Name = item1},
                 new ItemModel {Name = item2},
-                new ItemModel {Name = item3},
+                new ItemModel {Name = item3}
             };
 
-            var person = new PersonModel { Id = 1, Firstname = person1Firstname, Lastname = person1Lastname };
+            var person = new PersonModel {Id = 1, Firstname = person1Firstname, Lastname = person1Lastname};
 
             var order = new OrderModel
             {
@@ -77,6 +68,15 @@ namespace MyRA.Portation.Tests.IntegrationTests
         }
 
         [Fact]
+        public void TestObjectOrder_GetSheetName()
+        {
+            var targetType = typeof(OrderModel);
+            var orderSheetInfo = ExcelReflection.GetSheetInfo(targetType);
+
+            Assert.Equal(OrderModel.SHEET_NAME, orderSheetInfo.SheetName);
+        }
+
+        [Fact]
         public void TestObjectOrder_Import()
         {
             const string person1Firstname = "Anne";
@@ -90,10 +90,10 @@ namespace MyRA.Portation.Tests.IntegrationTests
             {
                 new ItemModel {Name = item1},
                 new ItemModel {Name = item2},
-                new ItemModel {Name = item3},
+                new ItemModel {Name = item3}
             };
 
-            var person = new PersonModel { Id = 1, Firstname = person1Firstname, Lastname = person1Lastname };
+            var person = new PersonModel {Id = 1, Firstname = person1Firstname, Lastname = person1Lastname};
 
             var order = new OrderModel
             {

@@ -59,32 +59,32 @@ namespace MyRA.Portation.TypeConverters
         {
             switch (value)
             {
-            case string strValue:
-                switch (strValue.ToLower())
-                {
-                case "ja":
-                case "j":
-                case "1":
-                case "y":
-                case "yes":
-                case "true":
-                case "t":
-                    return true;
+                case string strValue:
+                    switch (strValue.ToLower())
+                    {
+                        case "ja":
+                        case "j":
+                        case "1":
+                        case "y":
+                        case "yes":
+                        case "true":
+                        case "t":
+                            return true;
 
-                case "nee":
-                case "n":
-                case "0":
-                case "no":
-                case "false":
-                case "f":
-                    return false;
+                        case "nee":
+                        case "n":
+                        case "0":
+                        case "no":
+                        case "false":
+                        case "f":
+                            return false;
+
+                        default:
+                            return bool.Parse(strValue);
+                    }
 
                 default:
-                    return bool.Parse(strValue);
-                }
-
-            default:
-                return base.ConvertFrom(context, culture, value);
+                    return base.ConvertFrom(context, culture, value);
             }
         }
 
@@ -104,15 +104,16 @@ namespace MyRA.Portation.TypeConverters
         /// <returns>
         ///     An <see cref="T:System.Object"></see> that represents the converted value.
         /// </returns>
-        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value,
+            Type destinationType)
         {
             switch (value)
             {
-            case bool boolValue:
-                return boolValue ? "ja" : "nee";
+                case bool boolValue:
+                    return boolValue ? "ja" : "nee";
 
-            default:
-                return base.ConvertFrom(context, culture, value);
+                default:
+                    return base.ConvertFrom(context, culture, value);
             }
         }
     }

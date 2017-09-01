@@ -34,7 +34,8 @@ namespace MyRA.Portation.Tests.Models
         {
             unchecked
             {
-                return ((Items != null ? Items.GetHashCode() : 0) * 397) ^ (Warehouse != null ? Warehouse.GetHashCode() : 0);
+                return ((Items != null ? Items.GetHashCode() : 0) * 397) ^
+                       (Warehouse != null ? Warehouse.GetHashCode() : 0);
             }
         }
 

@@ -20,7 +20,8 @@ namespace MyRA.Portation.Tests.Models
 
         private bool Equals(PersonModel other)
         {
-            return string.Equals(Firstname, other.Firstname) && Id == other.Id && string.Equals(Lastname, other.Lastname);
+            return string.Equals(Firstname, other.Firstname) && Id == other.Id &&
+                   string.Equals(Lastname, other.Lastname);
         }
 
         public override bool Equals(object obj)
@@ -37,7 +38,7 @@ namespace MyRA.Portation.Tests.Models
         {
             unchecked
             {
-                var hashCode = (Firstname != null ? Firstname.GetHashCode() : 0);
+                var hashCode = Firstname != null ? Firstname.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ Id;
                 hashCode = (hashCode * 397) ^ (Lastname != null ? Lastname.GetHashCode() : 0);
                 return hashCode;

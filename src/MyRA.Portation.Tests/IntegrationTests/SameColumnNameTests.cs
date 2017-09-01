@@ -36,7 +36,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 Assert.Equal(1, package.Workbook.Worksheets.Count);
 
                 // NOTE - EPPlus starts at 1
-                
+
                 var worksheet = package.Workbook.Worksheets[1];
                 Assert.Equal(SameColumnNameModel.COLUMN_NAME, worksheet.Cells[1, 1].Text);
                 Assert.Equal(SameColumnNameModel.COLUMN_NAME, worksheet.Cells[1, 2].Text);
@@ -69,7 +69,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 var importer = new ExcelModelImporter(stream);
                 var outputModels = importer.ImportModel<List<SameColumnNameModel>>();
 
-                Assert.Equal<SameColumnNameModel>(models, outputModels);
+                Assert.Equal(models, outputModels);
             }
         }
     }

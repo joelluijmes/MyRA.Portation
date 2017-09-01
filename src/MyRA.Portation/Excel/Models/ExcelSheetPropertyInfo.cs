@@ -14,7 +14,8 @@ namespace MyRA.Portation.Excel.Models
         /// </summary>
         /// <param name="attribute">The attribute.</param>
         /// <param name="property">The property.</param>
-        public ExcelSheetPropertyInfo(ExcelSheetAttribute attribute, PropertyInfo property) : base(attribute, property.PropertyType)
+        public ExcelSheetPropertyInfo(ExcelSheetAttribute attribute, PropertyInfo property) : base(attribute,
+            property.PropertyType)
         {
             Property = property;
         }

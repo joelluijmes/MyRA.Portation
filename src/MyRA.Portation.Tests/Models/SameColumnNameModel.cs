@@ -31,7 +31,8 @@ namespace MyRA.Portation.Tests.Models
         {
             unchecked
             {
-                return ((Firstname != null ? Firstname.GetHashCode() : 0) * 397) ^ (Lastname != null ? Lastname.GetHashCode() : 0);
+                return ((Firstname != null ? Firstname.GetHashCode() : 0) * 397) ^
+                       (Lastname != null ? Lastname.GetHashCode() : 0);
             }
         }
 

@@ -48,19 +48,19 @@ namespace MyRA.Portation.Excel.Exporters
         {
             switch (data)
             {
-            case object[] myArray:
-                var arrayType = myArray.GetType().GetElementType();
-                ExportSheetImpl(sheetName, arrayType, myArray);
-                break;
+                case object[] myArray:
+                    var arrayType = myArray.GetType().GetElementType();
+                    ExportSheetImpl(sheetName, arrayType, myArray);
+                    break;
 
-            case IEnumerable<object> list:
-                var enumerableType = list.GetType().GetGenericArguments()[0];
-                ExportSheetImpl(sheetName, enumerableType, list);
-                break;
+                case IEnumerable<object> list:
+                    var enumerableType = list.GetType().GetGenericArguments()[0];
+                    ExportSheetImpl(sheetName, enumerableType, list);
+                    break;
 
-            default:
-                ExportSheetImpl(sheetName, data.GetType(), data);
-                break;
+                default:
+                    ExportSheetImpl(sheetName, data.GetType(), data);
+                    break;
             }
         }
 
@@ -106,7 +106,8 @@ namespace MyRA.Portation.Excel.Exporters
                     throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
                 worksheet.Cells[parsingProperty.Column.Value, 1].Value = parsingProperty.ColumnName;
-                worksheet.Cells[parsingProperty.Column.Value, 2].Value = ExcelReflection.GetValue(parsingProperty, data);
+                worksheet.Cells[parsingProperty.Column.Value, 2].Value =
+                    ExcelReflection.GetValue(parsingProperty, data);
             }
         }
 
@@ -131,7 +132,7 @@ namespace MyRA.Portation.Excel.Exporters
 
                 worksheet.Cells[1, parsingProperty.Column.Value].Value = parsingProperty.ColumnName;
             }
-            
+
             // write the data
             // +2 : EPPlus starts at 1, and we have a column header
             var index = 2;
@@ -142,7 +143,8 @@ namespace MyRA.Portation.Excel.Exporters
                     if (!parsingProperty.Column.HasValue)
                         throw new InvalidOperationException($"unreachable code with property: {parsingProperty}");
 
-                    worksheet.Cells[index, parsingProperty.Column.Value].Value = ExcelReflection.GetValue(parsingProperty, row);
+                    worksheet.Cells[index, parsingProperty.Column.Value].Value =
+                        ExcelReflection.GetValue(parsingProperty, row);
                 }
 
                 ++index;

@@ -20,7 +20,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             {
                 new ItemModel {Name = item1},
                 new ItemModel {Name = item2},
-                new ItemModel {Name = item3},
+                new ItemModel {Name = item3}
             };
 
             const string warehouse = "Topicus";
@@ -46,7 +46,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 Assert.Equal(StockModel.SHEET_NAME, infoWorksheet.Name);
                 Assert.Equal(nameof(StockModel.Warehouse), infoWorksheet.Cells[1, 1].Text);
                 Assert.Equal(warehouse, infoWorksheet.Cells[1, 2].Text);
-                
+
                 var itemsWorksheet = package.Workbook.Worksheets[2];
                 Assert.Equal(nameof(OrderModel.Items), itemsWorksheet.Name);
                 Assert.Equal(nameof(ItemModel.Name), itemsWorksheet.Cells[1, 1].Text);
@@ -67,7 +67,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
             {
                 new ItemModel {Name = item1},
                 new ItemModel {Name = item2},
-                new ItemModel {Name = item3},
+                new ItemModel {Name = item3}
             };
 
             const string warehouse = "Topicus";

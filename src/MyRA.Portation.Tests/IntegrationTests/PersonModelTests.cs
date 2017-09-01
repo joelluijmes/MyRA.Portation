@@ -12,38 +12,6 @@ namespace MyRA.Portation.Tests.IntegrationTests
     public sealed class PersonModelTests
     {
         [Fact]
-        public void TestObjectPerson_GetParsingProperties()
-        {
-            var targetType = typeof(PersonModel);
-            var parsingProperties = ExcelReflection.GetParsingProperties(targetType);
-
-            Assert.Equal(3, parsingProperties.Count);
-
-            // NOTE - GetParsingProperties must be in order of properties declared (eg for default column numbering)
-            Assert.Equal((string) nameof(PersonModel.Id), (string) parsingProperties[0].ColumnName);
-            Assert.Equal((string) nameof(PersonModel.Firstname), (string) parsingProperties[1].ColumnName);
-            Assert.Equal((string) nameof(PersonModel.Lastname), (string) parsingProperties[2].ColumnName);
-        }
-
-        [Fact]
-        public void TestObjectPerson_GetSheetName()
-        {
-            var targetType = typeof(PersonModel);
-            var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
-
-            Assert.Equal((string) PersonModel.SHEET_NAME, (string) sheetInfo.SheetName);
-        }
-
-        [Fact]
-        public void TestObjectPersonList_GetSheetName()
-        {
-            var targetType = typeof(IList<PersonModel>);
-            var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
-            
-            Assert.Equal((string) PersonModel.SHEET_NAME, (string) sheetInfo.SheetName);
-        }
-
-        [Fact]
         public void TestObjectPerson_Export()
         {
             const string person1Firstname = "Anne";
@@ -72,6 +40,49 @@ namespace MyRA.Portation.Tests.IntegrationTests
 
                 Assert.Equal(person1Firstname, worksheet.Cells[2, 2].Text);
                 Assert.Equal(person1Lastname, worksheet.Cells[3, 2].Text);
+            }
+        }
+
+        [Fact]
+        public void TestObjectPerson_GetParsingProperties()
+        {
+            var targetType = typeof(PersonModel);
+            var parsingProperties = ExcelReflection.GetParsingProperties(targetType);
+
+            Assert.Equal(3, parsingProperties.Count);
+
+            // NOTE - GetParsingProperties must be in order of properties declared (eg for default column numbering)
+            Assert.Equal(nameof(PersonModel.Id), parsingProperties[0].ColumnName);
+            Assert.Equal(nameof(PersonModel.Firstname), parsingProperties[1].ColumnName);
+            Assert.Equal(nameof(PersonModel.Lastname), parsingProperties[2].ColumnName);
+        }
+
+        [Fact]
+        public void TestObjectPerson_GetSheetName()
+        {
+            var targetType = typeof(PersonModel);
+            var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
+
+            Assert.Equal(PersonModel.SHEET_NAME, sheetInfo.SheetName);
+        }
+
+        [Fact]
+        public void TestObjectPerson_Import()
+        {
+            const string person1Firstname = "Anne";
+            const string person1Lastname = "Jenzen";
+
+            var person = new PersonModel {Id = 1, Firstname = person1Firstname, Lastname = person1Lastname};
+
+            using (var stream = new MemoryStream())
+            {
+                var exporter = new ExcelModelExporter(stream);
+                exporter.ExportModel(person);
+
+                var importer = new ExcelModelImporter(stream);
+                var outputPerson = importer.ImportModel<PersonModel>();
+
+                Assert.Equal(person, outputPerson);
             }
         }
 
@@ -115,23 +126,12 @@ namespace MyRA.Portation.Tests.IntegrationTests
         }
 
         [Fact]
-        public void TestObjectPerson_Import()
+        public void TestObjectPersonList_GetSheetName()
         {
-            const string person1Firstname = "Anne";
-            const string person1Lastname = "Jenzen";
+            var targetType = typeof(IList<PersonModel>);
+            var sheetInfo = ExcelReflection.GetSheetInfo(targetType);
 
-            var person = new PersonModel { Id = 1, Firstname = person1Firstname, Lastname = person1Lastname };
-
-            using (var stream = new MemoryStream())
-            {
-                var exporter = new ExcelModelExporter(stream);
-                exporter.ExportModel(person);
-
-                var importer = new ExcelModelImporter(stream);
-                var outputPerson = importer.ImportModel<PersonModel>();
-
-                Assert.Equal(person, outputPerson);
-            }
+            Assert.Equal(PersonModel.SHEET_NAME, sheetInfo.SheetName);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace MyRA.Portation.Tests.IntegrationTests
                 var impoter = new ExcelModelImporter(stream);
                 var outputPersons = impoter.ImportModel<List<PersonModel>>();
 
-                Assert.Equal<PersonModel>(persons, outputPersons);
+                Assert.Equal(persons, outputPersons);
             }
         }
     }

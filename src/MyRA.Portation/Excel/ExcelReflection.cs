@@ -22,7 +22,9 @@ namespace MyRA.Portation.Excel
             // string inherts form ienumerable<char>; and that is not what we want now
             return type == typeof(string)
                 ? null
-                : type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>))?.GetGenericArguments()[0];
+                : type.GetInterfaces()
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                    ?.GetGenericArguments()[0];
         }
 
         /// <summary>
@@ -52,15 +54,13 @@ namespace MyRA.Portation.Excel
                 .ToArray();
 
             if (duplicateColumnGroups.Length > 0)
-            {
                 throw new ParserException("Model has duplicate columns at:\r\n" +
                                           $"{duplicateColumnGroups.Select(g => $"{g.Key} - {g.Select(p => p.ColumnName).Aggregate((acc, cur) => $"{acc}, {cur}")}").Aggregate(" ", (acc, cur) => $"{acc}\r\n {cur}")}");
-            }
 
             var invalidColumn = properties.FirstOrDefault(p => p.Attribute.Column == 0);
             if (invalidColumn != null)
                 throw new ParserException($"Property {invalidColumn} has invalid column, columns starts at 1");
-            
+
             return properties;
         }
 
@@ -131,7 +131,7 @@ namespace MyRA.Portation.Excel
             if (nullableTargetType != null)
             {
                 // if string is null, set it as null
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     parsingPropertyInfo.Property.SetValue(obj, null);
                     return;
@@ -179,14 +179,17 @@ namespace MyRA.Portation.Excel
                 ? (TypeConverter) Activator.CreateInstance(converterType)
                 : TypeDescriptor.GetConverter(targetType);
 
-            if (converter is IFormattableConverter formatableConverter && !String.IsNullOrEmpty(parsingPropertyInfo.Attribute.ConverterFormat))
+            if (converter is IFormattableConverter formatableConverter &&
+                !string.IsNullOrEmpty(parsingPropertyInfo.Attribute.ConverterFormat))
                 formatableConverter.ConvertFormat = parsingPropertyInfo.Attribute.ConverterFormat;
 
             return converter;
         }
 
-        private static bool TryGetAttribute<T>(ICustomAttributeProvider memberInfo, out T customAttribute) where T : Attribute
-        { // Try to get attribute of T from the memberInfo (Properties, fields etc.)
+        private static bool TryGetAttribute<T>(ICustomAttributeProvider memberInfo, out T customAttribute)
+            where T : Attribute
+        {
+            // Try to get attribute of T from the memberInfo (Properties, fields etc.)
             var attributes = memberInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
             if (attributes == null)
             {

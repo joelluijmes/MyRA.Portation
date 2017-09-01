@@ -14,7 +14,9 @@ namespace MyRA.Portation.Excel.Models
         /// </summary>
         /// <param name="attribute">The attribute.</param>
         /// <param name="type">The type.</param>
-        public ExcelSheetClassInfo(ExcelSheetAttribute attribute, Type type) : base(attribute, type) { }
+        public ExcelSheetClassInfo(ExcelSheetAttribute attribute, Type type) : base(attribute, type)
+        {
+        }
 
         /// <summary>
         ///     Get value to be exported.

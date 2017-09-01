@@ -12,27 +12,37 @@ namespace MyRA.Portation.Exceptions
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExportException" /> class.
         /// </summary>
-        public ExportException() { }
+        public ExportException()
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExportException" /> class.
         /// </summary>
         /// <param name="innerException">The inner exception.</param>
-        public ExportException(Exception innerException) : base("Exception while exporting", innerException) { }
+        public ExportException(Exception innerException) : base("Exception while exporting", innerException)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExportException" /> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public ExportException(string message) : base(message) { }
+        public ExportException(string message) : base(message)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ExportException" /> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public ExportException(string message, Exception innerException) : base(message, innerException) { }
+        public ExportException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
 
-        private ExportException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        private ExportException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

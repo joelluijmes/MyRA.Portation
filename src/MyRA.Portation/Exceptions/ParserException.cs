@@ -12,19 +12,25 @@ namespace MyRA.Portation.Exceptions
         /// <summary>
         ///     Initializes a new instance of the <see cref="ParserException" /> class.
         /// </summary>
-        public ParserException() : base("Exception during parsing.") { }
+        public ParserException() : base("Exception during parsing.")
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ParserException" /> class.
         /// </summary>
         /// <param name="innerException">The inner exception.</param>
-        public ParserException(Exception innerException) : base("Exception during parsing.", innerException) { }
+        public ParserException(Exception innerException) : base("Exception during parsing.", innerException)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ParserException" /> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public ParserException(string message) : base(message) { }
+        public ParserException(string message) : base(message)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ParserException" /> class.
@@ -34,8 +40,12 @@ namespace MyRA.Portation.Exceptions
         ///     The exception that is the cause of the current exception, or a null reference (Nothing in
         ///     Visual Basic) if no inner exception is specified.
         /// </param>
-        public ParserException(string message, Exception innerException) : base(message, innerException) { }
+        public ParserException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
 
-        private ParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        private ParserException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

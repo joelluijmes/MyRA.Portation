@@ -24,7 +24,7 @@ namespace MyRA.Portation.Tests.Models
 
         public override int GetHashCode()
         {
-            return (Name != null ? Name.GetHashCode() : 0);
+            return Name != null ? Name.GetHashCode() : 0;
         }
 
         public static bool operator ==(ItemModel left, ItemModel right)

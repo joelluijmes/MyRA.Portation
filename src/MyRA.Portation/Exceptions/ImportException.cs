@@ -12,19 +12,25 @@ namespace MyRA.Portation.Exceptions
         /// <summary>
         ///     Initializes a new instance of the <see cref="ImportException" /> class.
         /// </summary>
-        public ImportException() { }
+        public ImportException()
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ImportException" /> class.
         /// </summary>
         /// <param name="innerException">The inner exception.</param>
-        public ImportException(Exception innerException) : base("Exception while importing", innerException) { }
+        public ImportException(Exception innerException) : base("Exception while importing", innerException)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ImportException" /> class.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
-        public ImportException(string message) : base(message) { }
+        public ImportException(string message) : base(message)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ImportException" /> class.
@@ -34,8 +40,12 @@ namespace MyRA.Portation.Exceptions
         ///     The exception that is the cause of the current exception, or a null reference (Nothing in
         ///     Visual Basic) if no inner exception is specified.
         /// </param>
-        public ImportException(string message, Exception innerException) : base(message, innerException) { }
+        public ImportException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
 
-        private ImportException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        private ImportException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
     }
 }

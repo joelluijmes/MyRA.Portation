@@ -43,7 +43,9 @@ namespace MyRA.Portation.Excel.Importers
             }
             catch (COMException exception)
             {
-                throw new ImportException("Exception during creating ExcelPackage. Hint: is the input stream a valid .xlsx file? Note that .xls is NOT supported by EPPlus.", exception);
+                throw new ImportException(
+                    "Exception during creating ExcelPackage. Hint: is the input stream a valid .xlsx file? Note that .xls is NOT supported by EPPlus.",
+                    exception);
             }
             catch (Exception exception)
             {
@@ -95,7 +97,8 @@ namespace MyRA.Portation.Excel.Importers
             return ImportSheetAsListImpl(sheetName, typeof(T)).Cast<T>().ToList();
         }
 
-        private static void FixColumns(ExcelRange headerRange, IList<ExcelPropertyInfo> parsingProperties, ColomnOrientation orientation)
+        private static void FixColumns(ExcelRange headerRange, IList<ExcelPropertyInfo> parsingProperties,
+            ColomnOrientation orientation)
         {
             var startRow = headerRange.Start.Row;
             var startCol = headerRange.Start.Column;
@@ -131,22 +134,25 @@ namespace MyRA.Portation.Excel.Importers
 
                         // NOTE - we keep on iterating, even if we have found the column because we are going to throw exception if we find duplicate
                         if (column.HasValue)
-                            throw new ImportException($"Could not parse columns; column {property} was already found at {column}");
+                            throw new ImportException(
+                                $"Could not parse columns; column {property} was already found at {column}");
                         if (takenColumns.Contains(xy))
-                            throw new ImportException($"Could not parse columns; column {property} is already been taken");
+                            throw new ImportException(
+                                $"Could not parse columns; column {property} is already been taken");
 
                         column = xy;
                     }
                 }
                 else
                 {
-                    throw new ImportException("Could not parse columns; current object does not have harcoded Column or ColumnName");
+                    throw new ImportException(
+                        "Could not parse columns; current object does not have harcoded Column or ColumnName");
                 }
-                
+
                 property.Column = column;
                 takenColumns.Add(column.Value);
             }
-            
+
             var missingProperties = parsingProperties
                 .Where(p => !p.Column.HasValue)
                 .ToArray();
@@ -175,7 +181,8 @@ namespace MyRA.Portation.Excel.Importers
                 throw new ImportException($"Import file missing sheet with name {sheetName}");
 
             // row of objects, column at first 
-            var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column, worksheet.Dimension.Start.Row, worksheet.Dimension.End.Column];
+            var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column,
+                worksheet.Dimension.Start.Row, worksheet.Dimension.End.Column];
             FixColumns(headerRange, parsingProperties, ColomnOrientation.Horizontal);
 
             // skip the header
@@ -214,7 +221,8 @@ namespace MyRA.Portation.Excel.Importers
                 throw new ImportException($"Import file missing sheet with name {sheetName}");
 
             // single object, import as KEY : VALUE instead of multiple rows
-            var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column, worksheet.Dimension.End.Row, worksheet.Dimension.Start.Column];
+            var headerRange = worksheet.Cells[worksheet.Dimension.Start.Row, worksheet.Dimension.Start.Column,
+                worksheet.Dimension.End.Row, worksheet.Dimension.Start.Column];
             FixColumns(headerRange, parsingProperties, ColomnOrientation.Vertical);
 
             foreach (var parsingProperty in parsingProperties)

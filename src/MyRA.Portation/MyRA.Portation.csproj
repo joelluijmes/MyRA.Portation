@@ -9,13 +9,13 @@
 
     <Description>Generic package for importing and exporting models. Currently only Excel is supported, which uses EPPlus.Core</Description>
 
-    <Authors>Topicus Fincare</Authors>
+    <Authors>Joël Luijmes</Authors>
 
-    <Company>Topicus Fincare</Company>
+    <Company>MyRA</Company>
 
-    <PackageProjectUrl>https://hg.topicus.nl/fincare/components/MyRA.portation</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/joelluijmes/MyRA.portation</PackageProjectUrl>
 
-    <RepositoryUrl>https://hg.topicus.nl/fincare/components/MyRA.portation</RepositoryUrl>
+    <RepositoryUrl>https://github.com/joelluijmes/MyRA.portation</RepositoryUrl>
 
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
   </PropertyGroup>
